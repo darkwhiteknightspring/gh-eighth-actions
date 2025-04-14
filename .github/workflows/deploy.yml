@@ -71,6 +71,9 @@ jobs:
           bucket: gh-actions-hosting-static-website
           dist-folder: ./dist
           bucket-region: us-east-1
+      - name: Output Information
+        run: |
+          echo "Live URL : ${{steps.deploy.outputs.website-url}}"
   # information: 
   #   runs-on: ubuntu-latest
   #   steps:
