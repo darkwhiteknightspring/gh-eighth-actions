@@ -2,7 +2,7 @@ name: Deployment
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -10,7 +10,12 @@ jobs:
       - name: Get code
         uses: actions/checkout@v4
       - name: Load and cache dependency
+        id: cache-deps
         uses: ./.github/actions/cached-deps # starts at root level of the project
+        with:
+          caching: 'false'
+      - name: Output information
+        run: echo "Cache used ? ${{steps.cache-deps.outputs.used-cache}}"
       - name: Lint code
         run: npm run lint
   test:
@@ -25,7 +30,7 @@ jobs:
         run: npm run test
       - name: Upload test report
         if: failure() && steps.run-tests.outcome == 'failure'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-report
           path: test.json
